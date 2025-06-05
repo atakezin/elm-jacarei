@@ -1,0 +1,12 @@
+     {
+       "name": "sistema-escolar",
+       "version": "1.0.0",
+       "description": "Sistema Escolar - Dashboard para gestão de alunos, professores e matrículas",
+       "main": "index.html",
+       "scripts": {
+         "start": "vercel build && vercel deploy"
+       },
+       "keywords": [],
+       "author": "Seu Nome",
+       "license": "MIT"
+     }
