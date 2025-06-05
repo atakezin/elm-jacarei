@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema Escolar</title>
-    <!-- Links para Tailwind CSS -->
+    <!-- Links para Tailwind CSS e Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #f3f4f6; /* Cor de fundo similar ao dashboard */
@@ -16,64 +17,51 @@
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-
     <div class="login-container bg-white p-8 rounded-lg shadow-md w-full">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login do Sistema Escolar</h2>
+        <h2 class="text-2xl font-bold text-center mb-6">Sistema Escolar - Login</h2>
+        <div id="testCredentialsInfo" class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6" role="alert">
+            <p class="font-bold">Credenciais de Teste:</p>
+            <p>Email: gerente@escola.com</p>
+            <p>Senha: senha123</p>
+        </div>
         <form id="loginForm">
             <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuário:</label>
-                <input type="text" id="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Senha:</label>
                 <input type="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
-                    Entrar
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Entrar
                 </button>
             </div>
-            <p id="errorMessage" class="text-red-500 text-xs italic mt-4 text-center hidden"></p>
         </form>
     </div>
+&lt;script&gt;
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const errorMessage = document.getElementById('errorMessage');
+        // Credenciais de teste
+        const testEmail = 'gerente@escola.com';
+        const testPassword = 'senha123';
 
-            // --- Simulação de Autenticação ---
-            // Para este exemplo, vamos apenas verificar se os campos não estão vazios.
-            // Em um sistema real, você enviaria essas credenciais para um servidor para validação.
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-
-            if (username && password) {
-                // Simula login bem-sucedido para o gerente
-                localStorage.setItem('isAuthenticated', 'true');
-                localStorage.setItem('userRole', 'gerente'); // Define a role como 'gerente'
-                errorMessage.classList.add('hidden'); // Esconde mensagem de erro se houver
-
-                // Redireciona para a página principal (index.html)
-                window.location.href = 'index.html';
-            } else {
-                // Exibe mensagem de erro se os campos estiverem vazios
-                errorMessage.textContent = 'Por favor, preencha usuário e senha.';
-                errorMessage.classList.remove('hidden');
-            }
-             // --- Fim da Simulação de Autenticação ---
-        });
-
-        // Verifica se o usuário já está autenticado ao carregar a página de login
-        // Se sim, redireciona para o dashboard.
-        if (localStorage.getItem('isAuthenticated') === 'true' && localStorage.getItem('userRole') === 'gerente') {
-             window.location.href = 'index.html';
+        if (email === testEmail && password === testPassword) {
+            // Autenticação bem-sucedida
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('userRole', 'gerente'); // Definindo a role como gerente
+            window.location.href = 'index.html'; // Redireciona para o dashboard
+        } else {
+            // Autenticação falhou
+            alert('Credenciais inválidas. Use as credenciais de teste.');
         }
-
-    </script>
+    });
+&lt;/script&gt;
 
 </body>
 </html>
