@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema Escolar</title>
-    <!-- Links para Tailwind CSS e Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background-color: #f3f4f6; /* Cor de fundo similar ao dashboard */
+            background-color: #f3f4f6;
         }
         .login-container {
             max-width: 400px;
@@ -19,49 +18,110 @@
 <body class="flex items-center justify-center min-h-screen">
     <div class="login-container bg-white p-8 rounded-lg shadow-md w-full">
         <h2 class="text-2xl font-bold text-center mb-6">Sistema Escolar - Login</h2>
-        <div id="testCredentialsInfo" class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6" role="alert">
-            <p class="font-bold">Credenciais de Teste:</p>
-            <p>Email: gerente@escola.com</p>
-            <p>Senha: senha123</p>
-        </div>
         <form id="loginForm">
             <div class="mb-4">
                 <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                >
+                <div class="text-red-500 text-sm" id="emailError"></div>
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Senha:</label>
-                <input type="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                >
+                <div class="text-red-500 text-sm" id="passwordError"></div>
             </div>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button 
+                    type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
                     <i class="fas fa-sign-in-alt mr-2"></i> Entrar
                 </button>
             </div>
         </form>
+        <div id="generalError" class="text-red-500 text-sm mt-4"></div>
     </div>
-&lt;script&gt;
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const generalError = document.getElementById('generalError');
 
-        // Credenciais de teste
-        const testEmail = 'gerente@escola.com';
-        const testPassword = 'senha123';
-
-        if (email === testEmail && password === testPassword) {
-            // Autenticação bem-sucedida
-            localStorage.setItem('isAuthenticated', 'true');
-            localStorage.setItem('userRole', 'gerente'); // Definindo a role como gerente
-            window.location.href = 'index.html'; // Redireciona para o dashboard
-        } else {
-            // Autenticação falhou
-            alert('Credenciais inválidas. Use as credenciais de teste.');
+        // Função de validação de email
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
-    });
-&lt;/script&gt;
 
+        // Função de validação de senha
+        function isValidPassword(password) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
+        }
+
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            generalError.textContent = '';
+            emailError.textContent = '';
+            passwordError.textContent = '';
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validar campos
+            let hasErrors = false;
+
+            if (!email || !isValidEmail(email)) {
+                emailError.textContent = 'Email inválido';
+                hasErrors = true;
+            }
+
+            if (!password || !isValidPassword(password)) {
+                passwordError.textContent = 'A senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e um caractere especial';
+                hasErrors = true;
+            }
+
+            if (hasErrors) return;
+
+            try {
+                // Simulação de requisição ao backend
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Credenciais inválidas');
+                }
+
+                const data = await response.json();
+                
+                // Armazenar token de autenticação
+                localStorage.setItem('authToken', data.token);
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                generalError.textContent = error.message;
+            }
+        });
+    </script>
 </body>
 </html>

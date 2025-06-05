@@ -4,244 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Gerente - Sistema Escolar</title>
-    <!-- Links para Tailwind CSS e Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Link para Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Estilos customizados /
+        /* Estilos customizados */
         body {
-            display: none; / Esconde o body até verificar autenticação */
+            font-family: 'Segoe UI', sans-serif;
         }
         .sidebar {
             width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2c3e50;
+            color: white;
         }
         .content {
             margin-left: 250px;
-        }
-        .hidden {
-            display: none;
-        }
-        .modal-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal {
-            background-color: white;
             padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            position: relative;
-        }
-        .modal-container.large .modal {
-            max-width: 800px;
-        }
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-        }
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            color: white;
-            z-index: 1002;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .notification.show {
-            opacity: 1;
-        }
-        .notification.success {
-            background-color: #4CAF50;
-        }
-        .notification.error {
-            background-color: #f44336;
-        }
-        .notification.info {
-            background-color: #2196F3;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-group textarea {
-            min-height: 100px;
-        }
-        .form-group input.invalid,
-        .form-group select.invalid,
-        .form-group textarea.invalid {
-            border-color: #f44336;
-        }
-        .validation-error {
-            color: #f44336;
-            font-size: 0.875rem;
-            margin-top: 5px;
-        }
-        .pagination button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .report-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #eee;
-        }
-        .report-section h3 {
-            margin-bottom: 15px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }
-        .report-filters {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #eef;
-            border-radius: 8px;
-            border: 1px solid #dde;
-        }
-        .report-filters label {
-            font-weight: bold;
-        }
-        .report-filters input[type="date"] {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
         .chart-container {
-            position: relative;
             height: 400px;
             width: 100%;
         }
-    /* Melhoria: Sidebar Responsiva */
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 100%;
-            position: static;
-            height: auto;
-        }
-        .content {
-            margin-left: 0;
-        }
-    }
-&lt;/style&gt;
-
+    </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <i class="fas fa-spinner fa-spin fa-3x text-blue-600"></i>
-    </div>
-    <!-- Notification Area -->
-    <div id="notificationArea" class="notification"></div>
-    <!-- Sidebar -->
-    <div class="sidebar fixed h-screen bg-gray-800 text-white flex flex-col">
-        <div class="p-5 text-2xl font-bold text-center border-b border-gray-700">
-            Sistema Escolar
-        </div>
-        <nav class="flex-grow p-5">
-            <ul>
-                <li class="mb-4">
-                    <a href="#" id="navDashboard" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+<body>
+    <div class="sidebar">
+        <div class="p-4 text-xl font-bold text-center border-b">Sistema Escolar</div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li>
+                    <a href="#dashboard" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-home mr-3"></i> Dashboard
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navAlunos" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#alunos" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-user-graduate mr-3"></i> Alunos
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navProfessores" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#professores" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-chalkboard-teacher mr-3"></i> Professores
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navCursos" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#cursos" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-book-open mr-3"></i> Cursos
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navTurmas" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#turmas" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-users mr-3"></i> Turmas
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navMatriculas" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#matriculas" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-file-signature mr-3"></i> Matrículas
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navMensalidades" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#mensalidades" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-money-bill-wave mr-3"></i> Mensalidades
                     </a>
                 </li>
-                <li class="mb-4">
-                    <a href="#" id="navLeads" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#leads" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-bullhorn mr-3"></i> Leads
                     </a>
                 </li>
-                 <li class="mb-4">
-                    <a href="#" id="navReports" class="flex items-center text-gray-400 hover:text-white transition duration-200">
+                <li>
+                    <a href="#relatorios" class="flex items-center text-gray-300 hover:text-white">
                         <i class="fas fa-chart-line mr-3"></i> Relatórios
                     </a>
                 </li>
             </ul>
-        </nav>
-        <div class="p-5 border-t border-gray-700">
-            <button id="logoutButton" class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200">
+        </div>
+        <div class="p-4 border-t border-gray-700">
+            <button 
+                id="logoutButton" 
+                class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200"
+            >
                 <i class="fas fa-sign-out-alt mr-2"></i> Sair
             </button>
         </div>
     </div>
-    <!-- Page Content -->
-    <div class="content p-8">
-        <!-- Dashboard Section -->
-        <section id="dashboardSection" class="hidden">
+
+    <div class="content">
+        <div id="dashboardSection">
             <h2 class="text-3xl font-bold mb-6">Dashboard Gerencial</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-lg shadow">
@@ -251,1659 +104,108 @@
                         </div>
                         <div>
                             <p class="text-gray-600">Total de Alunos</p>
-                            <p id="totalAlunosCard" class="text-2xl font-bold text-gray-800">-</p>
+                            <p id="totalAlunosCard" class="text-2xl font-bold text-gray-800">0</p>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                            <i class="fas fa-chalkboard-teacher fa-lg"></i>
+                            <i class="fas fa-money-bill-wave fa-lg"></i>
                         </div>
                         <div>
-                            <p class="text-gray-600">Total de Professores</p>
-                            <p id="totalProfessoresCard" class="text-2xl font-bold text-gray-800">-</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                            <i class="fas fa-users fa-lg"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Total de Turmas Ativas</p>
-                            <p id="totalTurmasAtivasCard" class="text-2xl font-bold text-gray-800">-</p>
+                            <p class="text-gray-600">Mensalidades Pagas</p>
+                            <p id="totalMensalidadesCard" class="text-2xl font-bold text-gray-800">0</p>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-                            <i class="fas fa-money-bill-wave fa-lg"></i>
+                            <i class="fas fa-bullhorn fa-lg"></i>
                         </div>
                         <div>
-                            <p class="text-gray-600">Mensalidades Pendentes</p>
-                            <p id="mensalidadesPendentesCard" class="text-2xl font-bold text-gray-800">-</p>
+                            <p class="text-gray-600">Novos Leads</p>
+                            <p id="totalLeadsCard" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                            <i class="fas fa-chart-line fa-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Relatórios Gerados</p>
+                            <p id="totalRelatoriosCard" class="text-2xl font-bold text-gray-800">0</p>
                         </div>
                     </div>
                 </div>
             </div>
-        &lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-6"&gt;
-            &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-                &lt;h3 class="text-xl font-bold mb-4"&gt;Tendência de Matrículas (Últimos 6 Meses)&lt;/h3&gt;
-                &lt;div class="chart-container"&gt;
-                    &lt;canvas id="enrollmentTrendsChart"&gt;&lt;/canvas&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-             &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-                &lt;h3 class="text-xl font-bold mb-4"&gt;Leads por Status&lt;/h3&gt;
-                &lt;div class="chart-container"&gt;
-                    &lt;canvas id="leadsByStatusChart"&gt;&lt;/canvas&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
+            <div class="chart-container">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+        </div>
+    </div>
 
-         &lt;div class="bg-white p-6 rounded-lg shadow mt-6"&gt;
-            &lt;h3 class="text-xl font-bold mb-4"&gt;Log de Atividades Recentes&lt;/h3&gt;
-             &lt;div id="activityLog" class="space-y-3 text-sm text-gray-700"&gt;
-                 &lt;!-- Logs serão carregados aqui --&gt;
-                 &lt;p&gt;Carregando logs...&lt;/p&gt;
-             &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-    &lt;!-- Alunos Section --&gt;
-    &lt;section id="alunosSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Alunos&lt;/h2&gt;
-        &lt;div class="flex justify-between mb-4"&gt;
-            &lt;input type="text" id="searchAlunos" placeholder="Buscar aluno por nome ou email..." class="p-2 border rounded w-1/3"&gt;
-             &lt;select id="filterAlunoStatus" class="p-2 border rounded ml-4"&gt;
-                &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                &lt;option value="ativo"&gt;Ativo&lt;/option&gt;
-                &lt;option value="inativo"&gt;Inativo&lt;/option&gt;
-                &lt;option value="trancado"&gt;Trancado&lt;/option&gt;
-             &lt;/select&gt;
-            &lt;button id="addAlunoButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Aluno
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Nome&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Email&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Telefone&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="alunosTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados dos alunos serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-            &lt;div id="alunosPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-    &lt;!-- Professores Section --&gt;
-    &lt;section id="professoresSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Professores&lt;/h2&gt;
-         &lt;div class="flex justify-between mb-4"&gt;
-            &lt;input type="text" id="searchProfessores" placeholder="Buscar professor por nome ou email..." class="p-2 border rounded w-1/3"&gt;
-             &lt;select id="filterProfessorStatus" class="p-2 border rounded ml-4"&gt;
-                &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                &lt;option value="ativo"&gt;Ativo&lt;/option&gt;
-                &lt;option value="inativo"&gt;Inativo&lt;/option&gt;
-             &lt;/select&gt;
-            &lt;button id="addProfessorButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Professor
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Nome&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Email&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Telefone&lt;/th&gt;
-                         &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="professoresTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados dos professores serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="professoresPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-    &lt;!-- Cursos Section --&gt;
-    &lt;section id="cursosSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Cursos&lt;/h2&gt;
-         &lt;div class="flex justify-end mb-4"&gt;
-            &lt;button id="addCursoButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Curso
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Nome do Curso&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Descrição&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Duração&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="cursosTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados dos cursos serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="cursosPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-    &lt;!-- Turmas Section --&gt;
-    &lt;section id="turmasSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Turmas&lt;/h2&gt;
-         &lt;div class="flex justify-between mb-4"&gt;
-            &lt;div class="flex items-center"&gt;
-                 &lt;select id="filterTurmaCurso" class="p-2 border rounded mr-4"&gt;
-                    &lt;option value=""&gt;Todos os Cursos&lt;/option&gt;
-                     &lt;!-- Options populated by JS --&gt;
-                 &lt;/select&gt;
-                 &lt;select id="filterTurmaProfessor" class="p-2 border rounded mr-4"&gt;
-                    &lt;option value=""&gt;Todos os Professores&lt;/option&gt;
-                     &lt;!-- Options populated by JS --&gt;
-                 &lt;/select&gt;
-                &lt;select id="filterTurmaStatus" class="p-2 border rounded"&gt;
-                    &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                    &lt;option value="true"&gt;Ativa&lt;/option&gt;
-                    &lt;option value="false"&gt;Inativa&lt;/option&gt;
-                &lt;/select&gt;
-            &lt;/div&gt;
-            &lt;button id="addTurmaButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Turma
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Nome da Turma&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Curso&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Professor&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="turmasTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados das turmas serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="turmasPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-     &lt;!-- Matrículas Section --&gt;
-    &lt;section id="matriculasSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Matrículas&lt;/h2&gt;
-         &lt;div class="flex justify-between mb-4"&gt;
-            &lt;div class="flex items-center"&gt;
-                 &lt;select id="filterMatriculaAluno" class="p-2 border rounded mr-4"&gt;
-                    &lt;option value=""&gt;Todos os Alunos&lt;/option&gt;
-                     &lt;!-- Options populated by JS --&gt;
-                 &lt;/select&gt;
-                 &lt;select id="filterMatriculaTurma" class="p-2 border rounded mr-4"&gt;
-                    &lt;option value=""&gt;Todas as Turmas&lt;/option&gt;
-                     &lt;!-- Options populated by JS --&gt;
-                 &lt;/select&gt;
-                &lt;select id="filterMatriculaStatus" class="p-2 border rounded"&gt;
-                    &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                    &lt;option value="ativa"&gt;Ativa&lt;/option&gt;
-                    &lt;option value="concluida"&gt;Concluída&lt;/option&gt;
-                    &lt;option value="cancelada"&gt;Cancelada&lt;/option&gt;
-                &lt;/select&gt;
-            &lt;/div&gt;
-            &lt;button id="addMatriculaButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Matrícula
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Aluno&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Turma&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Data Matrícula&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="matriculasTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados das matrículas serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="matriculasPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-     &lt;!-- Mensalidades Section --&gt;
-    &lt;section id="mensalidadesSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Mensalidades&lt;/h2&gt;
-         &lt;div class="flex justify-between mb-4"&gt;
-            &lt;div class="flex items-center"&gt;
-                 &lt;select id="filterMensalidadeMatricula" class="p-2 border rounded mr-4"&gt;
-                    &lt;option value=""&gt;Todas as Matrículas&lt;/option&gt;
-                     &lt;!-- Options populated by JS --&gt;
-                 &lt;/select&gt;
-                &lt;select id="filterMensalidadeStatus" class="p-2 border rounded"&gt;
-                    &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                    &lt;option value="pendente"&gt;Pendente&lt;/option&gt;
-                    &lt;option value="pago"&gt;Pago&lt;/option&gt;
-                    &lt;option value="atrasado"&gt;Atrasado&lt;/option&gt;
-                &lt;/select&gt;
-            &lt;/div&gt;
-             &lt;!-- Botão Adicionar Mensalidade removido, pois mensalidades são geradas por matrícula --&gt;
-             &lt;!-- &lt;button id="addMensalidadeButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Mensalidade
-            &lt;/button&gt; --&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Matrícula ID&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Aluno&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Valor&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Data Vencimento&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Data Pagamento&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="mensalidadesTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados das mensalidades serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="mensalidadesPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-    &lt;!-- Leads Section --&gt;
-    &lt;section id="leadsSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Gestão de Leads&lt;/h2&gt;
-         &lt;div class="flex justify-between mb-4"&gt;
-            &lt;input type="text" id="searchLeads" placeholder="Buscar lead por nome ou email..." class="p-2 border rounded w-1/3"&gt;
-             &lt;select id="filterLeadCurso" class="p-2 border rounded ml-4"&gt;
-                &lt;option value=""&gt;Todos os Cursos de Interesse&lt;/option&gt;
-                 &lt;!-- Options populated by JS --&gt;
-             &lt;/select&gt;
-            &lt;select id="filterLeadStatus" class="p-2 border rounded ml-4"&gt;
-                &lt;option value=""&gt;Todos os Status&lt;/option&gt;
-                &lt;option value="novo"&gt;Novo&lt;/option&gt;
-                &lt;option value="contatado"&gt;Contatado&lt;/option&gt;
-                &lt;option value="qualificado"&gt;Qualificado&lt;/option&gt;
-                &lt;option value="desqualificado"&gt;Desqualificado&lt;/option&gt;
-                &lt;option value="convertido"&gt;Convertido&lt;/option&gt;
-            &lt;/select&gt;
-            &lt;button id="addLeadButton" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"&gt;
-                &lt;i class="fas fa-plus mr-2"&gt;&lt;/i&gt; Adicionar Lead
-            &lt;/button&gt;
-        &lt;/div&gt;
-        &lt;div class="bg-white p-6 rounded-lg shadow"&gt;
-            &lt;table class="min-w-full divide-y divide-gray-200"&gt;
-                &lt;thead&gt;
-                    &lt;tr&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Nome&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Email&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Telefone&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Curso Interesse&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Status&lt;/th&gt;
-                        &lt;th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Ações&lt;/th&gt;
-                    &lt;/tr&gt;
-                &lt;/thead&gt;
-                &lt;tbody id="leadsTableBody" class="bg-white divide-y divide-gray-200"&gt;
-                    &lt;!-- Dados dos leads serão carregados aqui --&gt;
-                &lt;/tbody&gt;
-            &lt;/table&gt;
-             &lt;div id="leadsPagination" class="pagination mt-4 flex justify-between items-center"&gt;
-                &lt;!-- Paginação será carregada aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/section&gt;
-
-     &lt;!-- Relatórios Section --&gt;
-    &lt;section id="reportsSection" class="hidden"&gt;
-        &lt;h2 class="text-3xl font-bold mb-6"&gt;Relatórios&lt;/h2&gt;
-
-        &lt;!-- Relatório de Matrículas por Status --&gt;
-        &lt;div class="report-section"&gt;
-            &lt;h3 class="flex justify-between items-center"&gt;
-                Relatório de Matrículas por Status
-                &lt;button id="generateMatriculasReport" class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 text-sm"&gt;
-                    Gerar Relatório
-                &lt;/button&gt;
-            &lt;/h3&gt;
-             &lt;div class="report-filters flex items-center mb-4"&gt;
-                 &lt;label for="filterReportMatriculasStatus" class="mr-2 text-sm"&gt;Status:&lt;/label&gt;
-                 &lt;select id="filterReportMatriculasStatus" class="p-1 border rounded text-sm"&gt;
-                    &lt;option value=""&gt;Todos&lt;/option&gt;
-                    &lt;option value="ativa"&gt;Ativa&lt;/option&gt;
-                    &lt;option value="concluida"&gt;Concluída&lt;/option&gt;
-                    &lt;option value="cancelada"&gt;Cancelada&lt;/option&gt;
-                 &lt;/select&gt;
-             &lt;/div&gt;
-            &lt;div id="matriculasReportSummary" class="mb-4 text-sm text-gray-700"&gt;
-                &lt;!-- Resumo será carregado aqui --&gt;
-            &lt;/div&gt;
-            &lt;div class="chart-container"&gt;
-                &lt;canvas id="matriculasReportChart"&gt;&lt;/canvas&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-
-         &lt;!-- Relatório de Mensalidades por Status --&gt;
-        &lt;div class="report-section"&gt;
-            &lt;h3 class="flex justify-between items-center"&gt;
-                Relatório de Mensalidades por Status
-                 &lt;button id="generateMensalidadesReport" class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 text-sm"&gt;
-                    Gerar Relatório
-                &lt;/button&gt;
-            &lt;/h3&gt;
-             &lt;div class="report-filters flex items-center mb-4"&gt;
-                 &lt;label for="filterReportMensalidadesStatus" class="mr-2 text-sm"&gt;Status:&lt;/label&gt;
-                 &lt;select id="filterReportMensalidadesStatus" class="p-1 border rounded text-sm"&gt;
-                    &lt;option value=""&gt;Todos&lt;/option&gt;
-                    &lt;option value="pendente"&gt;Pendente&lt;/option&gt;
-                    &lt;option value="pago"&gt;Pago&lt;/option&gt;
-                    &lt;option value="atrasado"&gt;Atrasado&lt;/option&gt;
-                 &lt;/select&gt;
-             &lt;/div&gt;
-             &lt;div id="mensalidadesReportSummary" class="mb-4 text-sm text-gray-700"&gt;
-                &lt;!-- Resumo será carregado aqui --&gt;
-            &lt;/div&gt;
-            &lt;div class="chart-container"&gt;
-                &lt;canvas id="mensalidadesReportChart"&gt;&lt;/canvas&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-
-         &lt;!-- Relatório de Leads por Origem --&gt;
-        &lt;div class="report-section"&gt;
-            &lt;h3 class="flex justify-between items-center"&gt;
-                Relatório de Leads por Origem
-                 &lt;button id="generateLeadsReport" class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 text-sm"&gt;
-                    Gerar Relatório
-                &lt;/button&gt;
-            &lt;/h3&gt;
-             &lt;div id="leadsReportSummary" class="mb-4 text-sm text-gray-700"&gt;
-                &lt;!-- Resumo será carregado aqui --&gt;
-            &lt;/div&gt;
-            &lt;div class="chart-container"&gt;
-                &lt;canvas id="leadsReportChart"&gt;&lt;/canvas&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-
-    &lt;/section&gt;
-
-
-    &lt;!-- Modal Container --&gt;
-    &lt;div id="modalContainer" class="modal-container hidden"&gt;
-        &lt;div class="modal"&gt;
-            &lt;span class="modal-close" onclick="closeModal()"&gt;&times;&lt;/span&gt;
-            &lt;h3 id="modalTitle" class="text-xl font-bold mb-4"&gt;&lt;/h3&gt;
-            &lt;div id="modalBody"&gt;
-                &lt;!-- Conteúdo do modal (formulário ou detalhes) será carregado aqui --&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-
-     &lt;!-- Modal de Confirmação de Exclusão --&gt;
-    &lt;div id="confirmDeleteModal" class="modal-container hidden"&gt;
-        &lt;div class="modal"&gt;
-            &lt;span class="modal-close" onclick="closeConfirmDeleteModal()"&gt;&times;&lt;/span&gt;
-            &lt;h3 class="text-xl font-bold mb-4"&gt;Confirmar Exclusão&lt;/h3&gt;
-            &lt;p id="confirmDeleteMessage" class="mb-6"&gt;&lt;/p&gt;
-            &lt;div class="flex justify-end gap-4"&gt;
-                &lt;button onclick="closeConfirmDeleteModal()" class="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"&gt;Cancelar&lt;/button&gt;
-                &lt;button id="confirmDeleteButton" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"&gt;Excluir&lt;/button&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;script&gt;
-    // Dados simulados (substituir por chamadas de API reais)
-    let data = {
-        alunos: [
-            { id: 1, nome: 'Ana Silva', email: 'ana.silva@escola.com', telefone: '11 98765-4321', dataCadastro: '2023-01-15', status: 'ativo' },
-            { id: 2, nome: 'Bruno Costa', email: 'bruno.costa@escola.com', telefone: '21 99876-5432', dataCadastro: '2023-02-20', status: 'ativo' },
-            { id: 3, nome: 'Carla Souza', email: 'carla.souza@escola.com', telefone: '31 97654-3210', dataCadastro: '2023-03-10', status: 'inativo' },
-             { id: 4, nome: 'Daniel Pereira', email: 'daniel.pereira@escola.com', telefone: '41 96543-2109', dataCadastro: '2023-04-05', status: 'ativo' },
-             { id: 5, nome: 'Eduarda Lima', email: 'eduarda.lima@escola.com', telefone: '51 95432-1098', dataCadastro: '2023-05-25', status: 'trancado' },
-        ],
-        professores: [
-            { id: 1, nome: 'Prof. João Santos', email: 'joao.santos@escola.com', telefone: '11 91234-5678', dataContratacao: '2022-08-01', status: 'ativo' },
-            { id: 2, nome: 'Prof. Maria Oliveira', email: 'maria.oliveira@escola.com', telefone: '21 92345-6789', dataContratacao: '2022-09-10', status: 'ativo' },
-             { id: 3, nome: 'Prof. Pedro Almeida', email: 'pedro.almeida@escola.com', telefone: '31 93456-7890', dataContratacao: '2023-01-01', status: 'inativo' },
-        ],
-        cursos: [
-            { id: 1, nome: 'Desenvolvimento Web', descricao: 'Curso completo de desenvolvimento front-end e back-end.', duracao: '6 meses' },
-            { id: 2, nome: 'Ciência de Dados', descricao: 'Introdução à análise e visualização de dados.', duracao: '4 meses' },
-             { id: 3, nome: 'Marketing Digital', descricao: 'Estratégias e ferramentas de marketing online.', duracao: '3 meses' },
-        ],
-         turmas: [
-            { id: 1, nome: 'DW 2024/1', cursoId: 1, professorId: 1, dataInicio: '2024-03-01', dataFim: '2024-08-31', ativa: true },
-            { id: 2, nome: 'CD 2024/1', cursoId: 2, professorId: 2, dataInicio: '2024-04-01', dataFim: '2024-07-31', ativa: true },
-             { id: 3, nome: 'MD 2024/1', cursoId: 3, professorId: 1, dataInicio: '2024-05-01', dataFim: '2024-07-31', ativa: true },
-             { id: 4, nome: 'DW 2023/2', cursoId: 1, professorId: 2, dataInicio: '2023-09-01', dataFim: '2024-02-29', ativa: false },
-        ],
-        matriculas: [
-            { id: 1, alunoId: 1, turmaId: 1, dataMatricula: '2024-02-28', status: 'ativa' },
-            { id: 2, alunoId: 2, turmaId: 2, dataMatricula: '2024-03-25', status: 'ativa' },
-             { id: 3, alunoId: 3, turmaId: 4, dataMatricula: '2023-08-30', status: 'concluida' },
-             { id: 4, alunoId: 4, turmaId: 1, dataMatricula: '2024-03-10', status: 'ativa' },
-             { id: 5, alunoId: 5, turmaId: 3, dataMatricula: '2024-04-20', status: 'cancelada' },
-        ],
-         mensalidades: [
-            { id: 1, matriculaId: 1, valor: 500.00, dataVencimento: '2024-03-15', dataPagamento: '2024-03-10', status: 'pago' },
-            { id: 2, matriculaId: 1, valor: 500.00, dataVencimento: '2024-04-15', dataPagamento: null, status: 'pendente' },
-            { id: 3, matriculaId: 1, valor: 500.00, dataVencimento: '2024-05-15', dataPagamento: null, status: 'pendente' },
-             { id: 4, matriculaId: 2, valor: 600.00, dataVencimento: '2024-04-20', dataPagamento: '2024-04-18', status: 'pago' },
-             { id: 5, matriculaId: 2, valor: 600.00, dataVencimento: '2024-05-20', dataPagamento: null, status: 'pendente' },
-             { id: 6, matriculaId: 3, valor: 550.00, dataVencimento: '2023-09-10', dataPagamento: '2023-09-10', status: 'pago' },
-             { id: 7, matriculaId: 3, valor: 550.00, dataVencimento: '2023-10-10', dataPagamento: '2023-10-15', status: 'pago' },
-             { id: 8, matriculaId: 4, valor: 500.00, dataVencimento: '2024-04-10', dataPagamento: '2024-04-10', status: 'pago' },
-             { id: 9, matriculaId: 4, valor: 500.00, dataVencimento: '2024-05-10', dataPagamento: null, status: 'atrasado' }, // Exemplo de atrasado
-        ],
-        leads: [
-            { id: 1, nome: 'Fernando Rocha', email: 'fernando.rocha@email.com', telefone: '11 98765-1234', cursoInteresse: 1, origem: 'Website', status: 'novo', dataContato: '2024-05-01' },
-            { id: 2, nome: 'Giovana Dias', email: 'giovana.dias@email.com', telefone: '21 99876-1234', cursoInteresse: 2, origem: 'Redes Sociais', status: 'contatado', dataContato: '2024-05-05' },
-             { id: 3, nome: 'Hugo Martins', email: 'hugo.martins@email.com', telefone: '31 97654-1234', cursoInteresse: 3, origem: 'Indicação', status: 'qualificado', dataContato: '2024-05-10' },
-             { id: 4, nome: 'Isabela Gomes', email: 'isabela.gomes@email.com', telefone: '41 96543-1234', cursoInteresse: 1, origem: 'Website', status: 'convertido', dataContato: '2024-05-15' }, // Convertido em aluno 4
-             { id: 5, nome: 'Julio Cesar', email: 'julio.cesar@email.com', telefone: '51 95432-1234', cursoInteresse: 2, origem: 'Redes Sociais', status: 'desqualificado', dataContato: '2024-05-20' },
-        ],
-         activityLog: [
-            { id: 1, timestamp: '2024-06-04 10:00', activity: 'Login do usuário gerente@escola.com' },
-            { id: 2, timestamp: '2024-06-04 10:05', activity: 'Visualizou lista de Alunos' },
-             { id: 3, timestamp: '2024-06-04 10:10', activity: 'Adicionou novo Aluno: Maria Eduarda' },
-             { id: 4, timestamp: '2024-06-04 10:15', activity: 'Editou Professor: Prof. João Santos' },
-             { id: 5, timestamp: '2024-06-04 10:20', activity: 'Gerou Relatório de Mensalidades' },
-        ]
-    };
-
-    // Configuração dos campos do formulário para cada tipo de item
-    const formFieldsConfig = {
-        alunos: [
-            { name: 'nome', label: 'Nome', type: 'text', required: true },
-            { name: 'email', label: 'Email', type: 'email', required: true },
-            { name: 'telefone', label: 'Telefone', type: 'text', required: false },
-            { name: 'dataCadastro', label: 'Data de Cadastro', type: 'date', required: true, readOnlyEdit: true }, // Data automática na adição
-            { name: 'status', label: 'Status', type: 'select', options: ['ativo', 'inativo', 'trancado'], required: true }
-        ],
-        professores: [
-            { name: 'nome', label: 'Nome', type: 'text', required: true },
-            { name: 'email', label: 'Email', type: 'email', required: true },
-            { name: 'telefone', label: 'Telefone', type: 'text', required: false },
-            { name: 'dataContratacao', label: 'Data de Contratação', type: 'date', required: true, readOnlyEdit: true }, // Data automática na adição
-            { name: 'status', label: 'Status', type: 'select', options: ['ativo', 'inativo'], required: true }
-        ],
-        cursos: [
-            { name: 'nome', label: 'Nome do Curso', type: 'text', required: true },
-            { name: 'descricao', label: 'Descrição', type: 'textarea', required: false },
-            { name: 'duracao', label: 'Duração', type: 'text', required: true }
-        ],
-        turmas: [
-            { name: 'nome', label: 'Nome da Turma', type: 'text', required: true },
-            { name: 'cursoId', label: 'Curso', type: 'select', options: [], required: true, dataKey: 'cursos', optionText: 'nome', optionValue: 'id' },
-            { name: 'professorId', label: 'Professor', type: 'select', options: [], required: true, dataKey: 'professores', optionText: 'nome', optionValue: 'id' },
-            { name: 'dataInicio', label: 'Data de Início', type: 'date', required: true },
-            { name: 'dataFim', label: 'Data de Fim', type: 'date', required: false },
-             { name: 'ativa', label: 'Turma Ativa', type: 'checkbox', required: false }
-        ],
-        matriculas: [
-            { name: 'alunoId', label: 'Aluno', type: 'select', options: [], required: true, dataKey: 'alunos', optionText: 'nome', optionValue: 'id' },
-            { name: 'turmaId', label: 'Turma', type: 'select', options: [], required: true, dataKey: 'turmas', optionText: 'nome', optionValue: 'id' },
-            { name: 'dataMatricula', label: 'Data da Matrícula', type: 'date', required: true, readOnlyEdit: true }, // Data automática na adição
-            { name: 'status', label: 'Status', type: 'select', options: ['ativa', 'concluida', 'cancelada'], required: true }
-        ],
-        mensalidades: [
-             { name: 'matriculaId', label: 'Matrícula', type: 'select', options: [], required: true, dataKey: 'matriculas', optionText: (m) =&gt; `Matrícula ${m.id} - ${data.alunos.find(a =&gt; a.id === m.alunoId)?.nome}`, optionValue: 'id', readOnly: true },
-             { name: 'valor', label: 'Valor', type: 'number', required: true, step: '0.01' },
-             { name: 'dataVencimento', label: 'Data de Vencimento', type: 'date', required: true },
-             { name: 'dataPagamento', label: 'Data de Pagamento', type: 'date', required: false }, // Pode ser nulo
-             { name: 'status', label: 'Status', type: 'select', options: ['pendente', 'pago', 'atrasado'], required: true }
-        ],
-        leads: [
-             { name: 'nome', label: 'Nome', type: 'text', required: true },
-             { name: 'email', label: 'Email', type: 'email', required: true },
-             { name: 'telefone', label: 'Telefone', type: 'text', required: false },
-             { name: 'cursoInteresse', label: 'Curso de Interesse', type: 'select', options: [], required: false, dataKey: 'cursos', optionText: 'nome', optionValue: 'id', includeEmpty: true },
-             { name: 'origem', label: 'Origem do Lead', type: 'text', required: false },
-             { name: 'status', label: 'Status', type: 'select', options: ['novo', 'contatado', 'qualificado', 'desqualificado', 'convertido'], required: true },
-             { name: 'dataContato', label: 'Data do Contato', type: 'date', required: true, readOnlyEdit: true } // Data automática na adição
-        ]
-    };
-
-    // Variáveis de estado
-    let currentItemType = '';
-    let currentItemId = null;
-    let itemsPerPage = 10;
-    let currentPage = 1;
-    let currentSearchTerm = '';
-    let currentFilters = {};
-
-    // Variáveis para gráficos
-    let enrollmentTrendsChart = null;
-    let leadsByStatusChart = null;
-    let matriculasReportChart = null;
-    let mensalidadesReportChart = null;
-    let leadsReportChart = null;
-
-
-    // --- Funções de Autenticação ---
-    function checkAuthAndRole() {
-        const isAuthenticated = localStorage.getItem('isAuthenticated');
-        const userRole = localStorage.getItem('userRole');
-
-        if (!isAuthenticated || userRole !== 'gerente') {
-            // Redireciona para a página de login se não autenticado ou não for gerente
+    <script>
+        // Verificar autenticação
+        if (!localStorage.getItem('authToken')) {
             window.location.href = 'login.html';
-        } else {
-            // Mostra o corpo da página se autenticado e com a role correta
-            document.body.style.display = 'block';
-            // Carrega a seção inicial (Dashboard)
-            showSection('dashboardSection');
-             loadDashboardData();
-        }
-    }
-
-    function handleLogout() {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('userRole');
-        window.location.href = 'login.html';
-    }
-
-    // --- Funções de UI/UX ---
-    function showLoading() {
-        document.getElementById('loadingOverlay').classList.remove('hidden');
-    }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').classList.add('hidden');
-    }
-
-    function showNotification(message, type = 'info') {
-        const notificationArea = document.getElementById('notificationArea');
-        notificationArea.textContent = message;
-        notificationArea.className = `notification show ${type}`; // Remove classes antigas e adiciona novas
-        setTimeout(() =&gt; {
-            notificationArea.classList.remove('show');
-        }, 3000); // Remove após 3 segundos
-    }
-
-    function showSection(sectionId) {
-        // Esconde todas as seções
-        document.querySelectorAll('section').forEach(section =&gt; {
-            section.classList.add('hidden');
-        });
-
-        // Mostra a seção desejada
-        document.getElementById(sectionId).classList.remove('hidden');
-
-        // Atualiza o itemType atual para funções genéricas
-        currentItemType = sectionId.replace('Section', '');
-
-        // Reseta busca, filtros e paginação ao mudar de seção (exceto dashboard e reports)
-         if (currentItemType !== 'dashboard' && currentItemType !== 'reports') {
-             resetFiltersAndPagination(currentItemType);
-             loadAndRenderItems(currentItemType); // Carrega os dados da nova seção
-         } else if (currentItemType === 'dashboard') {
-             loadDashboardData(); // Recarrega dados do dashboard
-         }
-         // Relatórios são gerados sob demanda pelos botões
-    }
-
-    function openModal() {
-        document.getElementById('modalContainer').classList.remove('hidden');
-    }
-
-    function closeModal() {
-        document.getElementById('modalContainer').classList.add('hidden');
-        document.getElementById('modalBody').innerHTML = ''; // Limpa o conteúdo do modal
-        currentItemId = null; // Reseta o ID do item atual
-    }
-
-     function openConfirmDeleteModal(itemType, itemId) {
-         const modal = document.getElementById('confirmDeleteModal');
-         const message = document.getElementById('confirmDeleteMessage');
-         const confirmButton = document.getElementById('confirmDeleteButton');
-
-         const singularItemType = itemType.slice(0, -1); // Remove o 's' final
-         message.textContent = `Tem certeza que deseja excluir este ${singularItemType}? Esta ação não pode ser desfeita.`;
-
-         // Configura o botão de confirmação para chamar a função de exclusão correta
-         confirmButton.onclick = () =&gt; deleteItemAndRefresh(itemType, itemId);
-
-         modal.classList.remove('hidden');
-     }
-
-     function closeConfirmDeleteModal() {
-         document.getElementById('confirmDeleteModal').classList.add('hidden');
-     }
-
-
-    // --- Funções de Dados (Simulados) ---
-    function getItems(itemType, searchTerm = '', filters = {}) {
-        let items = [...data[itemType]]; // Copia os dados para não modificar o original
-
-        // Aplica busca
-        if (searchTerm) {
-            const lowerSearchTerm = searchTerm.toLowerCase();
-            const searchFields = {
-                alunos: ['nome', 'email'],
-                professores: ['nome', 'email'],
-                cursos: ['nome', 'descricao'],
-                turmas: ['nome'], // Busca por nome da turma
-                matriculas: [], // Busca não aplicável diretamente
-                mensalidades: [], // Busca não aplicável diretamente
-                leads: ['nome', 'email'],
-            }[itemType] || [];
-
-            items = items.filter(item =&gt;
-                searchFields.some(field =&gt;
-                    item[field]?.toString().toLowerCase().includes(lowerSearchTerm)
-                )
-            );
         }
 
-        // Aplica filtros
-        Object.keys(filters).forEach(filterKey =&gt; {
-            const filterValue = filters[filterKey];
-            if (filterValue !== '' && filterValue !== undefined && filterValue !== null) {
-                items = items.filter(item =&gt; {
-                     if (filterKey === 'ativa') { // Tratamento especial para booleanos
-                         return item[filterKey] === (filterValue === 'true');
-                     }
-                    // Converte para string para comparação flexível, exceto para IDs numéricos
-                    const itemValue = (typeof item[filterKey] === 'number' || typeof filterValue === 'number')
-                        ? item[filterKey]
-                        : String(item[filterKey]).toLowerCase();
-                    const valueToFilter = (typeof item[filterKey] === 'number' || typeof filterValue === 'number')
-                        ? filterValue
-                        : String(filterValue).toLowerCase();
-
-                     return itemValue === valueToFilter;
-                 });
-            }
-        });
-
-
-        return items;
-    }
-
-    function getItemById(itemType, id) {
-        return data[itemType].find(item =&gt; item.id === id);
-    }
-
-    async function saveItem(itemType, item) {
-        showLoading();
-        return new Promise(resolve =&gt; {
-            setTimeout(() =&gt; { // Simula delay da API
-                const singularItemType = itemType.slice(0, -1); // Remove o 's' final
-
-                if (item.id) {
-                    // Editar item existente
-                    const index = data[itemType].findIndex(i =&gt; i.id === item.id);
-                    if (index !== -1) {
-                        // Atualiza o item com os novos dados
-                        data[itemType][index] = { ...data[itemType][index], ...item };
-
-                         // Lógica específica para Mensalidades ao marcar como pago
-                         if (itemType === 'mensalidades' && item.status === 'pago' && !data[itemType][index].dataPagamento) {
-                             data[itemType][index].dataPagamento = new Date().toISOString().split('T')[0]; // Define data de pagamento como hoje
-                         }
-
-                        showNotification(`${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)} atualizado com sucesso!`, 'success');
-                        resolve(data[itemType][index]);
-                    } else {
-                        showNotification(`Erro ao atualizar ${singularItemType}. Item não encontrado.`, 'error');
-                        resolve(null);
+        // Carregar dados do dashboard
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     }
-                } else {
-                    // Adicionar novo item
-                    const newItem = {
-                        id: data[itemType].length ? Math.max(...data[itemType].map(i =&gt; i.id)) + 1 : 1,
-                        ...item
-                    };
+                });
+                
+                const data = await response.json();
+                
+                // Atualizar cards
+                document.getElementById('totalAlunosCard').textContent = data.totalAlunos || 0;
+                document.getElementById('totalMensalidadesCard').textContent = data.totalMensalidades || 0;
+                document.getElementById('totalLeadsCard').textContent = data.totalLeads || 0;
+                document.getElementById('totalRelatoriosCard').textContent = data.totalRelatorios || 0;
 
-                     // Definir datas de cadastro/contratação/matrícula/contato automaticamente na adição
-                     if (itemType === 'alunos' && !newItem.dataCadastro) newItem.dataCadastro = new Date().toISOString().split('T')[0];
-                     if (itemType === 'professores' && !newItem.dataContratacao) newItem.dataContratacao = new Date().toISOString().split('T')[0];
-                     if (itemType === 'matriculas' && !newItem.dataMatricula) newItem.dataMatricula = new Date().toISOString().split('T')[0];
-                     if (itemType === 'leads' && !newItem.dataContato) newItem.dataContato = new Date().toISOString().split('T')[0];
-
-                    data[itemType].push(newItem);
-                    showNotification(`${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)} adicionado com sucesso!`, 'success');
-                    resolve(newItem);
-                }
-                hideLoading();
-            }, 500); // Simula tempo de processamento
-        });
-    }
-
-    async function deleteItem(itemType, id) {
-         showLoading();
-         return new Promise(resolve =&gt; {
-             setTimeout(() =&gt; { // Simula delay da API
-                 const initialLength = data[itemType].length;
-                 // Filtra o item a ser removido
-                 data[itemType] = data[itemType].filter(item =&gt; item.id !== id);
-
-                 const singularItemType = itemType.slice(0, -1); // Remove o 's' final
-
-                 if (data[itemType].length &lt; initialLength) {
-                     showNotification(`${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)} excluído com sucesso!`, 'success');
-                     resolve(true); // Indica sucesso na exclusão
-                 } else {
-                     showNotification(`Erro ao excluir ${singularItemType}. Item não encontrado.`, 'error');
-                     resolve(false); // Indica falha na exclusão
-                 }
-                 hideLoading();
-             }, 500); // Simula tempo de processamento
-         });
-     }
-
-     async function deleteItemAndRefresh(itemType, id) {
-         closeConfirmDeleteModal(); // Fecha o modal de confirmação
-         const success = await deleteItem(itemType, id);
-         if (success) {
-             loadAndRenderItems(itemType); // Recarrega a lista após exclusão
-             // Atualiza cards do dashboard se necessário
-             if (itemType === 'alunos' || itemType === 'mensalidades') loadDashboardData();
-         }
-     }
-
-
-    // --- Funções de Renderização ---
-    function renderTable(itemType, items) {
-        const tableBody = document.getElementById(`${itemType}TableBody`);
-        if (!tableBody) return;
-
-        tableBody.innerHTML = ''; // Limpa o corpo da tabela
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const itemsToRender = items.slice(startIndex, endIndex);
-
-        itemsToRender.forEach(item =&gt; {
-            const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50';
-
-            // Renderiza colunas baseadas no itemType
-            let columnsHtml = '';
-            switch (itemType) {
-                case 'alunos':
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.nome}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.email}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.telefone || '-'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/td&gt;
-                    `;
-                    break;
-                case 'professores':
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.nome}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.email}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.telefone || '-'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/td&gt;
-                    `;
-                    break;
-                case 'cursos':
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.nome}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.descricao.substring(0, 50)}...&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.duracao}&lt;/td&gt;
-                    `;
-                    break;
-                case 'turmas':
-                     const curso = data.cursos.find(c =&gt; c.id === item.cursoId);
-                     const professor = data.professores.find(p =&gt; p.id === item.professorId);
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.nome}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${curso?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${professor?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.ativa ? 'Ativa' : 'Inativa'}&lt;/td&gt;
-                    `;
-                    break;
-                case 'matriculas':
-                    const alunoMat = data.alunos.find(a =&gt; a.id === item.alunoId);
-                    const turmaMat = data.turmas.find(t =&gt; t.id === item.turmaId);
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${alunoMat?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${turmaMat?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.dataMatricula}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/td&gt;
-                    `;
-                    break;
-                case 'mensalidades':
-                     const matriculaMen = data.matriculas.find(m =&gt; m.id === item.matriculaId);
-                     const alunoMen = data.alunos.find(a =&gt; a.id === matriculaMen?.alunoId);
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.matriculaId}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${alunoMen?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;R$ ${item.valor.toFixed(2)}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.dataVencimento}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.dataPagamento || '-'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/td&gt;
-                    `;
-                    break;
-                case 'leads':
-                     const cursoLead = data.cursos.find(c =&gt; c.id === item.cursoInteresse);
-                    columnsHtml = `
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.nome}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.email}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.telefone || '-'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${cursoLead?.nome || 'N/A'}&lt;/td&gt;
-                        &lt;td class="px-6 py-4 whitespace-nowrap"&gt;${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/td&gt;
-                    `;
-                    break;
+                // Atualizar gráfico
+                const ctx = document.getElementById('dashboardChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.meses || [],
+                        datasets: [{
+                            label: 'Mensalidades Pagas',
+                            data: data.mensalidadesData || [],
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao carregar dados do dashboard:', error);
             }
-
-            // Coluna de Ações
-            columnsHtml += `
-                &lt;td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"&gt;
-                    &lt;button onclick="openViewModal('${itemType}', ${item.id})" class="text-blue-600 hover:text-blue-900 mr-2"&gt;&lt;i class="fas fa-eye"&gt;&lt;/i&gt;&lt;/button&gt;
-                    &lt;button onclick="openAddEditModal('${itemType}', ${item.id})" class="text-yellow-600 hover:text-yellow-900 mr-2"&gt;&lt;i class="fas fa-edit"&gt;&lt;/i&gt;&lt;/button&gt;
-                    &lt;button onclick="openConfirmDeleteModal('${itemType}', ${item.id})" class="text-red-600 hover:text-red-900"&gt;&lt;i class="fas fa-trash-alt"&gt;&lt;/i&gt;&lt;/button&gt;
-                &lt;/td&gt;
-            `;
-
-            row.innerHTML = columnsHtml;
-            tableBody.appendChild(row);
-        });
-    }
-
-    function setupPagination(itemType, totalItems) {
-        const paginationContainer = document.getElementById(`${itemType}Pagination`);
-        if (!paginationContainer) return;
-
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        paginationContainer.innerHTML = ''; // Limpa a paginação anterior
-
-        if (totalPages &lt;= 1) return; // Não mostra paginação se houver apenas 1 página
-
-        const prevButton = document.createElement('button');
-        prevButton.textContent = 'Anterior';
-        prevButton.className = 'bg-gray-300 text-gray-800 py-1 px-3 rounded mr-2 hover:bg-gray-400';
-        prevButton.disabled = currentPage === 1;
-        prevButton.onclick = () =&gt; changePage(itemType, currentPage - 1);
-        paginationContainer.appendChild(prevButton);
-
-        const pageInfo = document.createElement('span');
-        pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-        pageInfo.className = 'text-gray-700';
-        paginationContainer.appendChild(pageInfo);
-
-        const nextButton = document.createElement('button');
-        nextButton.textContent = 'Próxima';
-        nextButton.className = 'bg-gray-300 text-gray-800 py-1 px-3 rounded ml-2 hover:bg-gray-400';
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.onclick = () =&gt; changePage(itemType, currentPage + 1);
-        paginationContainer.appendChild(nextButton);
-    }
-
-    function changePage(itemType, page) {
-        currentPage = page;
-        loadAndRenderItems(itemType);
-    }
-
-    function resetFiltersAndPagination(itemType) {
-         currentPage = 1;
-         currentSearchTerm = '';
-         currentFilters = {};
-
-         // Resetar campos de busca e filtro na UI
-         const searchInput = document.getElementById(`search${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`);
-         if (searchInput) searchInput.value = '';
-
-         const filterSelects = document.querySelectorAll(`#${itemType}Section select[id^="filter"]`);
-         filterSelects.forEach(select =&gt; select.value = '');
-     }
-
-
-    // --- Funções de Modais ---
-    function openViewModal(itemType, id) {
-        const item = getItemById(itemType, id);
-        if (!item) {
-            showNotification(`Item não encontrado.`, 'error');
-            return;
         }
 
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-        modalBody.innerHTML = ''; // Limpa o conteúdo anterior
-
-         const singularItemType = itemType.slice(0, -1); // Remove o 's' final
-        modalTitle.textContent = `Detalhes do ${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)}`;
-
-        // Renderiza detalhes baseados no itemType
-        let detailsHtml = '&lt;div class="space-y-3 text-gray-700"&gt;';
-        switch (itemType) {
-            case 'alunos':
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Nome:&lt;/strong&gt; ${item.nome}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; ${item.email}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Telefone:&lt;/strong&gt; ${item.telefone || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Cadastro:&lt;/strong&gt; ${item.dataCadastro}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/p&gt;`;
-                break;
-            case 'professores':
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Nome:&lt;/strong&gt; ${item.nome}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; ${item.email}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Telefone:&lt;/strong&gt; ${item.telefone || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Contratação:&lt;/strong&gt; ${item.dataContratacao}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/p&gt;`;
-                break;
-            case 'cursos':
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Nome do Curso:&lt;/strong&gt; ${item.nome}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Descrição:&lt;/strong&gt; ${item.descricao || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Duração:&lt;/strong&gt; ${item.duracao}&lt;/p&gt;`;
-                break;
-            case 'turmas':
-                 const curso = data.cursos.find(c =&gt; c.id === item.cursoId);
-                 const professor = data.professores.find(p =&gt; p.id === item.professorId);
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Nome da Turma:&lt;/strong&gt; ${item.nome}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Curso:&lt;/strong&gt; ${curso?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Professor:&lt;/strong&gt; ${professor?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Início:&lt;/strong&gt; ${item.dataInicio}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Fim:&lt;/strong&gt; ${item.dataFim || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.ativa ? 'Ativa' : 'Inativa'}&lt;/p&gt;`;
-                break;
-            case 'matriculas':
-                 const alunoMat = data.alunos.find(a =&gt; a.id === item.alunoId);
-                 const turmaMat = data.turmas.find(t =&gt; t.id === item.turmaId);
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Aluno:&lt;/strong&gt; ${alunoMat?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Turma:&lt;/strong&gt; ${turmaMat?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data da Matrícula:&lt;/strong&gt; ${item.dataMatricula}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/p&gt;`;
-                break;
-            case 'mensalidades':
-                 const matriculaMen = data.matriculas.find(m =&gt; m.id === item.matriculaId);
-                 const alunoMen = data.alunos.find(a =&gt; a.id === matriculaMen?.alunoId);
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Matrícula ID:&lt;/strong&gt; ${item.matriculaId}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Aluno:&lt;/strong&gt; ${alunoMen?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Valor:&lt;/strong&gt; R$ ${item.valor.toFixed(2)}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Vencimento:&lt;/strong&gt; ${item.dataVencimento}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data de Pagamento:&lt;/strong&gt; ${item.dataPagamento || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/p&gt;`;
-                break;
-            case 'leads':
-                 const cursoLead = data.cursos.find(c =&gt; c.id === item.cursoInteresse);
-                 detailsHtml += `&lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; ${item.id}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Nome:&lt;/strong&gt; ${item.nome}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; ${item.email}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Telefone:&lt;/strong&gt; ${item.telefone || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Curso de Interesse:&lt;/strong&gt; ${cursoLead?.nome || 'N/A'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Origem do Lead:&lt;/strong&gt; ${item.origem || '-'}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}&lt;/p&gt;`;
-                detailsHtml += `&lt;p&gt;&lt;strong&gt;Data do Contato:&lt;/strong&gt; ${item.dataContato}&lt;/p&gt;`;
-                break;
-        }
-        detailsHtml += '&lt;/div&gt;';
-        modalBody.innerHTML = detailsHtml;
-
-        openModal();
-    }
-
-    function openAddEditModal(itemType, id = null) {
-        currentItemType = itemType;
-        currentItemId = id;
-
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-        modalBody.innerHTML = ''; // Limpa o conteúdo anterior
-
-        const singularItemType = itemType.slice(0, -1); // Remove o 's' final
-        modalTitle.textContent = id ? `Editar ${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)}` : `Adicionar Novo ${singularItemType.charAt(0).toUpperCase() + singularItemType.slice(1)}`;
-
-        const config = formFieldsConfig[itemType];
-        const item = id ? getItemById(itemType, id) : {};
-
-        let formHtml = '&lt;form id="addEditForm"&gt;';
-        config.forEach(field =&gt; {
-            const fieldId = `${itemType}-${field.name}`;
-            const fieldValue = item[field.name] !== undefined ? item[field.name] : '';
-            const requiredAttr = field.required ? 'required' : '';
-            const readOnlyAttr = (id && field.readOnlyEdit) ? 'readonly' : ''; // Campo read-only em edição se especificado
-            const stepAttr = field.type === 'number' && field.step ? `step="${field.step}"` : '';
-
-
-            formHtml += `&lt;div class="form-group"&gt;
-                            &lt;label for="${fieldId}"&gt;${field.label}${field.required ? ' *' : ''}:&lt;/label&gt;`;
-
-            if (field.type === 'select') {
-                 formHtml += `&lt;select id="${fieldId}" name="${field.name}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" ${requiredAttr} ${readOnlyAttr}&gt;`;
-                 // Popula options
-                 if (field.includeEmpty) {
-                     formHtml += `&lt;option value=""&gt;Selecione...&lt;/option&gt;`;
-                 }
-                 if (field.dataKey) {
-                     const dataList = data[field.dataKey];
-                     dataList.forEach(optionItem =&gt; {
-                          const optionValue = optionItem[field.optionValue];
-                          const optionText = typeof field.optionText === 'function' ? field.optionText(optionItem) : optionItem[field.optionText];
-                          const selected = fieldValue === optionValue ? 'selected' : '';
-                          formHtml += `&lt;option value="${optionValue}" ${selected}&gt;${optionText}&lt;/option&gt;`;
-                     });
-                 } else {
-                     field.options.forEach(optionValue =&gt; {
-                          const selected = fieldValue === optionValue ? 'selected' : '';
-                          formHtml += `&lt;option value="${optionValue}" ${selected}&gt;${optionValue.charAt(0).toUpperCase() + optionValue.slice(1)}&lt;/option&gt;`;
-                     });
-                 }
-                 formHtml += `&lt;/select&gt;`;
-            } else if (field.type === 'textarea') {
-                formHtml += `&lt;textarea id="${fieldId}" name="${field.name}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" ${requiredAttr} ${readOnlyAttr}&gt;${fieldValue}&lt;/textarea&gt;`;
-            } else if (field.type === 'checkbox') {
-                 const checkedAttr = fieldValue ? 'checked' : '';
-                 formHtml += `&lt;input type="checkbox" id="${fieldId}" name="${field.name}" class="mr-2 leading-tight" ${requiredAttr} ${checkedAttr} ${readOnlyAttr}&gt;`;
-            }
-             else {
-                formHtml += `&lt;input type="${field.type}" id="${fieldId}" name="${field.name}" value="${fieldValue}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" ${requiredAttr} ${readOnlyAttr} ${stepAttr}&gt;`;
-            }
-
-            formHtml += `&lt;div id="${fieldId}-error" class="validation-error"&gt;&lt;/div&gt;&lt;/div&gt;`;
+        // Logout
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('authToken');
+            window.location.href = 'login.html';
         });
 
-        formHtml += `&lt;div class="flex justify-end gap-4 mt-6"&gt;
-                        &lt;button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"&gt;Cancelar&lt;/button&gt;
-                        &lt;button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"&gt;Salvar&lt;/button&gt;
-                     &lt;/div&gt;&lt;/form&gt;`;
-
-        modalBody.innerHTML = formHtml;
-
-         // Popula selects dinâmicos após o formulário ser adicionado ao DOM
-         config.forEach(field =&gt; {
-             if (field.type === 'select' && field.dataKey) {
-                 populateSelectOptions(field.dataKey, document.getElementById(`${itemType}-${field.name}`), field.optionText, field.optionValue, item[field.name], field.includeEmpty);
-             }
-         });
-
-
-        openModal();
-    }
-
-     function populateSelectOptions(dataKey, selectElement, optionTextKey, optionValueKey, selectedValue = null, includeEmpty = false) {
-         selectElement.innerHTML = ''; // Limpa opções existentes
-
-         if (includeEmpty) {
-              const emptyOption = document.createElement('option');
-              emptyOption.value = "";
-              emptyOption.textContent = "Selecione...";
-              selectElement.appendChild(emptyOption);
-         }
-
-         const dataList = data[dataKey];
-         if (dataList) {
-             dataList.forEach(item =&gt; {
-                 const option = document.createElement('option');
-                 const optionValue = item[optionValueKey];
-                 const optionText = typeof optionTextKey === 'function' ? optionTextKey(item) : item[optionTextKey];
-
-                 option.value = optionValue;
-                 option.textContent = optionText;
-
-                 if (selectedValue !== null && optionValue == selectedValue) { // Usar == para comparar number com string
-                     option.selected = true;
-                 }
-
-                 selectElement.appendChild(option);
-             });
-         }
-     }
-
-
-    // --- Funções de Validação ---
-    function validateForm(form, config) {
-        let isValid = true;
-        config.forEach(field =&gt; {
-            const input = form.elements[field.name];
-            const errorElement = document.getElementById(`${currentItemType}-${field.name}-error`);
-            errorElement.textContent = ''; // Limpa erros anteriores
-            input.classList.remove('invalid');
-
-            if (field.required && !input.value) {
-                errorElement.textContent = `${field.label} é obrigatório.`;
-                input.classList.add('invalid');
-                isValid = false;
-            }
-
-            // Exemplo de validação de email (pode ser expandido)
-            if (field.type === 'email' && input.value && !/\S+@\S+\.\S+/.test(input.value)) {
-                 errorElement.textContent = `Por favor, insira um email válido para ${field.label}.`;
-                 input.classList.add('invalid');
-                 isValid = false;
-            }
-
-             // Exemplo de validação de número (pode ser expandido)
-             if (field.type === 'number' && input.value && isNaN(parseFloat(input.value))) {
-                  errorElement.textContent = `${field.label} deve ser um número válido.`;
-                  input.classList.add('invalid');
-                  isValid = false;
-             }
-
-            // Adicionar outras validações conforme necessário (telefone, datas, etc.)
-        });
-        return isValid;
-    }
-
-
-    // --- Funções de Busca e Filtro ---
-    function handleSearch(itemType, event) {
-        currentSearchTerm = event.target.value;
-        currentPage = 1; // Reseta para a primeira página na busca
-        loadAndRenderItems(itemType);
-    }
-
-    function handleFilter(itemType, filterKey, event) {
-         currentFilters[filterKey] = event.target.value;
-         currentPage = 1; // Reseta para a primeira página no filtro
-         loadAndRenderItems(itemType);
-     }
-
-
-    // --- Funções de Carregamento e Renderização Principal ---
-    function loadAndRenderItems(itemType) {
-        showLoading();
-        // Simula carregamento assíncrono
-        setTimeout(() =&gt; {
-            const filteredItems = getItems(itemType, currentSearchTerm, currentFilters);
-            renderTable(itemType, filteredItems);
-            setupPagination(itemType, filteredItems.length);
-             // Popula selects de filtro se existirem e ainda não populados (evita repopular a cada busca/filtro)
-             if (itemType === 'turmas' && document.getElementById('filterTurmaCurso').options.length &lt;= 1) {
-                  populateSelectOptions('cursos', document.getElementById('filterTurmaCurso'), 'nome', 'id', null, true);
-                  populateSelectOptions('professores', document.getElementById('filterTurmaProfessor'), 'nome', 'id', null, true);
-             }
-             if (itemType === 'matriculas' && document.getElementById('filterMatriculaAluno').options.length &lt;= 1) {
-                 populateSelectOptions('alunos', document.getElementById('filterMatriculaAluno'), 'nome', 'id', null, true);
-                 populateSelectOptions('turmas', document.getElementById('filterMatriculaTurma'), 'nome', 'id', null, true);
-             }
-             if (itemType === 'mensalidades' && document.getElementById('filterMensalidadeMatricula').options.length &lt;= 1) {
-                  populateSelectOptions('matriculas', document.getElementById('filterMensalidadeMatricula'), (m) =&gt; `Matrícula ${m.id} - ${data.alunos.find(a =&gt; a.id === m.alunoId)?.nome}`, 'id', null, true);
-             }
-             if (itemType === 'leads' && document.getElementById('filterLeadCurso').options.length &lt;= 1) {
-                  populateSelectOptions('cursos', document.getElementById('filterLeadCurso'), 'nome', 'id', null, true);
-             }
-
-            hideLoading();
-        }, 300); // Simula tempo de carregamento
-    }
-
-    // --- Funções do Dashboard ---
-    function loadDashboardData() {
-         showLoading();
-         // Simula carregamento assíncrono
-         setTimeout(() =&gt; {
-             // Atualiza Cards
-             document.getElementById('totalAlunosCard').textContent = data.alunos.length;
-             document.getElementById('totalProfessoresCard').textContent = data.professores.length;
-             document.getElementById('totalTurmasAtivasCard').textContent = data.turmas.filter(t =&gt; t.ativa).length;
-             document.getElementById('mensalidadesPendentesCard').textContent = data.mensalidades.filter(m =&gt; m.status === 'pendente' || m.status === 'atrasado').length;
-
-             // Renderiza Gráficos
-             renderEnrollmentTrendsChart();
-             renderLeadsByStatusChart();
-
-             // Renderiza Log de Atividades (simulado)
-             renderActivityLog();
-
-             hideLoading();
-         }, 500); // Simula tempo de carregamento
-    }
-
-    function renderEnrollmentTrendsChart() {
-         const ctx = document.getElementById('enrollmentTrendsChart');
-         if (!ctx) return;
-
-         // Dados simulados para tendência de matrículas (últimos 6 meses)
-         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-         const enrollmentCounts = [10, 15, 12, 18, 20, 25]; // Exemplo de dados
-
-         if (enrollmentTrendsChart) {
-             enrollmentTrendsChart.destroy(); // Destroi o gráfico anterior se existir
-         }
-
-         enrollmentTrendsChart = new Chart(ctx, {
-             type: 'line',
-             data: {
-                 labels: months,
-                 datasets: [{
-                     label: 'Novas Matrículas',
-                     data: enrollmentCounts,
-                     borderColor: 'rgb(75, 192, 192)',
-                     tension: 0.1,
-                     fill: false
-                 }]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 scales: {
-                     y: {
-                         beginAtZero: true
-                     }
-                 },
-                 plugins: {
-                     legend: {
-                         display: true,
-                         position: 'top',
-                     },
-                     title: {
-                         display: false,
-                     }
-                 }
-             }
-         });
-    }
-
-     function renderLeadsByStatusChart() {
-         const ctx = document.getElementById('leadsByStatusChart');
-         if (!ctx) return;
-
-         // Contar leads por status
-         const leadsByStatus = data.leads.reduce((acc, lead) =&gt; {
-             acc[lead.status] = (acc[lead.status] || 0) + 1;
-             return acc;
-         }, {});
-
-         const labels = Object.keys(leadsByStatus).map(status =&gt; status.charAt(0).toUpperCase() + status.slice(1));
-         const counts = Object.values(leadsByStatus);
-         const backgroundColors = [
-             'rgba(54, 162, 235, 0.6)', // blue (novo)
-             'rgba(255, 206, 86, 0.6)', // yellow (contatado)
-             'rgba(75, 192, 192, 0.6)', // green (qualificado)
-             'rgba(255, 99, 132, 0.6)',  // red (desqualificado)
-             'rgba(153, 102, 255, 0.6)' // purple (convertido)
-         ];
-         const borderColors = [
-             'rgba(54, 162, 235, 1)',
-             'rgba(255, 206, 86, 1)',
-             'rgba(75, 192, 192, 1)',
-             'rgba(255, 99, 132, 1)',
-             'rgba(153, 102, 255, 1)'
-         ];
-
-
-         if (leadsByStatusChart) {
-             leadsByStatusChart.destroy();
-         }
-
-         leadsByStatusChart = new Chart(ctx, {
-             type: 'pie',
-             data: {
-                 labels: labels,
-                 datasets: [{
-                     data: counts,
-                     backgroundColor: backgroundColors,
-                     borderColor: borderColors,
-                     borderWidth: 1
-                 }]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 plugins: {
-                     legend: {
-                         position: 'top',
-                     },
-                     title: {
-                         display: false,
-                     }
-                 }
-             }
-         });
-     }
-
-     function renderActivityLog() {
-         const logDiv = document.getElementById('activityLog');
-         if (!logDiv) return;
-
-         // Exibe os últimos 5 logs (simulado)
-         const recentLogs = data.activityLog.slice(-5).reverse(); // Pega os últimos e inverte para mostrar o mais recente primeiro
-
-         if (recentLogs.length === 0) {
-             logDiv.innerHTML = '&lt;p&gt;Nenhuma atividade recente.&lt;/p&gt;';
-             return;
-         }
-
-         logDiv.innerHTML = recentLogs.map(log =&gt; {
-             return `&lt;p&gt;&lt;span class="font-semibold"&gt;${log.timestamp}:&lt;/span&gt; ${log.activity}&lt;/p&gt;`;
-         }).join('');
-     }
-
-
-     // --- Funções de Relatórios ---
-     function generateMatriculasReport() {
-         const statusFilter = document.getElementById('filterReportMatriculasStatus').value;
-         const summaryDiv = document.getElementById('matriculasReportSummary');
-         const ctx = document.getElementById('matriculasReportChart');
-
-         showLoading();
-
-         // Filtra matrículas pelo status selecionado
-         const filteredMatriculas = data.matriculas.filter(m =&gt;
-             statusFilter === '' || m.status === statusFilter
-         );
-
-         // Contar matrículas por status (aplica-se ao conjunto filtrado)
-         const matriculasByStatus = filteredMatriculas.reduce((acc, matricula) =&gt; {
-             acc[matricula.status] = (acc[matricula.status] || 0) + 1;
-             return acc;
-         }, {});
-
-         // Preparar dados para o gráfico
-         const labels = Object.keys(matriculasByStatus).map(status =&gt; status.charAt(0).toUpperCase() + status.slice(1));
-         const counts = Object.values(matriculasByStatus);
-         const backgroundColors = [
-             'rgba(75, 192, 192, 0.6)', // green (ativa)
-             'rgba(153, 102, 255, 0.6)', // purple (concluida)
-             'rgba(255, 99, 132, 0.6)'  // red (cancelada)
-         ];
-         const borderColors = [
-             'rgba(75, 192, 192, 1)',
-             'rgba(153, 102, 255, 1)',
-             'rgba(255, 99, 132, 1)'
-         ];
-
-
-         // Renderizar gráfico
-         if (matriculasReportChart) {
-             matriculasReportChart.destroy();
-         }
-         matriculasReportChart = new Chart(ctx, {
-             type: 'pie',
-             data: {
-                 labels: labels,
-                 datasets: [{
-                     data: counts,
-                     backgroundColor: backgroundColors,
-                     borderColor: borderColors,
-                     borderWidth: 1
-                 }]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 plugins: {
-                     legend: {
-                         position: 'top',
-                     },
-                     title: {
-                         display: false,
-                     }
-                 }
-             }
-         });
-
-         // Exibir resumo
-         summaryDiv.innerHTML = `&lt;p&gt;&lt;strong&gt;Total de Matrículas (${statusFilter || 'Todos os Status'}):&lt;/strong&gt; ${filteredMatriculas.length}&lt;/p&gt;`;
-
-         hideLoading();
-         showNotification('Relatório de Matrículas gerado.', 'success');
-     }
-
-     function generateMensalidadesReport() {
-         const statusFilter = document.getElementById('filterReportMensalidadesStatus').value;
-         const summaryDiv = document.getElementById('mensalidadesReportSummary');
-         const ctx = document.getElementById('mensalidadesReportChart');
-
-         showLoading();
-
-         // Filtra mensalidades pelo status selecionado
-         const filteredMensalidades = data.mensalidades.filter(m =&gt;
-             statusFilter === '' || m.status === statusFilter
-         );
-
-         // Contar mensalidades por status (aplica-se ao conjunto filtrado)
-         const mensalidadesByStatus = filteredMensalidades.reduce((acc, mensalidade) =&gt; {
-             acc[mensalidade.status] = (acc[mensalidade.status] || 0) + 1;
-             return acc;
-         }, {});
-
-         // Preparar dados para o gráfico
-         const labels = Object.keys(mensalidadesByStatus).map(status =&gt; status.charAt(0).toUpperCase() + status.slice(1));
-         const counts = Object.values(mensalidadesByStatus);
-          const backgroundColors = [
-             'rgba(255, 206, 86, 0.6)', // yellow (pendente)
-             'rgba(75, 192, 192, 0.6)', // green (pago)
-             'rgba(255, 99, 132, 0.6)'  // red (atrasado)
-         ];
-         const borderColors = [
-             'rgba(255, 206, 86, 1)',
-             'rgba(75, 192, 192, 1)',
-             'rgba(255, 99, 132, 1)'
-         ];
-
-
-         // Renderizar gráfico
-         if (mensalidadesReportChart) {
-             mensalidadesReportChart.destroy();
-         }
-         mensalidadesReportChart = new Chart(ctx, {
-             type: 'pie',
-             data: {
-                 labels: labels,
-                 datasets: [{
-                     data: counts,
-                     backgroundColor: backgroundColors,
-                     borderColor: borderColors,
-                     borderWidth: 1
-                 }]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 plugins: {
-                     legend: {
-                         position: 'top',
-                     },
-                     title: {
-                         display: false,
-                     }
-                 }
-             }
-         });
-
-         // Exibir resumo
-         let totalValor = filteredMensalidades.reduce((sum, m) =&gt; sum + m.valor, 0);
-         summaryDiv.innerHTML = `
-             &lt;p&gt;&lt;strong&gt;Total de Mensalidades (${statusFilter || 'Todos os Status'}):&lt;/strong&gt; ${filteredMensalidades.length}&lt;/p&gt;
-             &lt;p&gt;&lt;strong&gt;Valor Total (${statusFilter || 'Todos os Status'}):&lt;/strong&gt; R$ ${totalValor.toFixed(2)}&lt;/p&gt;
-         `;
-
-         hideLoading();
-         showNotification('Relatório de Mensalidades gerado.', 'success');
-     }
-
-     function generateLeadsReport() {
-         const summaryDiv = document.getElementById('leadsReportSummary');
-         const ctx = document.getElementById('leadsReportChart');
-
-         showLoading();
-
-         // Contar leads por origem
-         const leadsByOrigem = data.leads.reduce((acc, lead) =&gt; {
-             const origem = lead.origem || 'Desconhecida';
-             acc[origem] = (acc[origem] || 0) + 1;
-             return acc;
-         }, {});
-
-         // Preparar dados para o gráfico
-         const labels = Object.keys(leadsByOrigem);
-         const counts = Object.values(leadsByOrigem);
-         // Cores dinâmicas (pode ser melhorado com uma paleta fixa se houver muitas origens)
-         const backgroundColors = labels.map((_, i) =&gt; `hsla(${i * 60}, 70%, 60%, 0.6)`);
-         const borderColors = labels.map((_, i) =&gt; `hsla(${i * 60}, 70%, 60%, 1)`);
-
-         // Renderizar gráfico
-         if (leadsReportChart) {
-             leadsReportChart.destroy();
-         }
-         leadsReportChart = new Chart(ctx, {
-             type: 'doughnut',
-             data: {
-                 labels: labels,
-                 datasets: [{
-                     data: counts,
-                     backgroundColor: backgroundColors,
-                     borderColor: borderColors,
-                     borderWidth: 1
-                 }]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 plugins: {
-                     legend: {
-                         position: 'top',
-                     },
-                     title: {
-                         display: false,
-                     }
-                 }
-             }
-         });
-
-         // Exibir resumo
-         summaryDiv.innerHTML = `&lt;p&gt;&lt;strong&gt;Total de Leads:&lt;/strong&gt; ${data.leads.length}&lt;/p&gt;`;
-
-         hideLoading();
-         showNotification('Relatório de Leads por Origem gerado.', 'success');
-     }
-
-
-    // --- Event Listeners ---
-    document.addEventListener('DOMContentLoaded', checkAuthAndRole);
-    document.getElementById('logoutButton').addEventListener('click', handleLogout);
-
-    // Navigation listeners
-    document.getElementById('navDashboard').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('dashboardSection'); });
-    document.getElementById('navAlunos').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('alunosSection'); });
-    document.getElementById('navProfessores').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('professoresSection'); });
-    document.getElementById('navCursos').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('cursosSection'); });
-    document.getElementById('navTurmas').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('turmasSection'); });
-    document.getElementById('navMatriculas').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('matriculasSection'); });
-    document.getElementById('navMensalidades').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('mensalidadesSection'); });
-    document.getElementById('navLeads').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('leadsSection'); });
-     document.getElementById('navReports').addEventListener('click', (e) =&gt; { e.preventDefault(); showSection('reportsSection'); });
-
-
-    // Add button listeners
-    document.getElementById('addAlunoButton') && document.getElementById('addAlunoButton').addEventListener('click', () =&gt; openAddEditModal('alunos'));
-    document.getElementById('addProfessorButton') && document.getElementById('addProfessorButton').addEventListener('click', () =&gt; openAddEditModal('professores'));
-    document.getElementById('addCursoButton') && document.getElementById('addCursoButton').addEventListener('click', () =&gt; openAddEditModal('cursos'));
-    document.getElementById('addTurmaButton') && document.getElementById('addTurmaButton').addEventListener('click', () =&gt; openAddEditModal('turmas'));
-    document.getElementById('addMatriculaButton') && document.getElementById('addMatriculaButton').addEventListener('click', () =&gt; openAddEditModal('matriculas'));
-    // Botão Adicionar Mensalidade foi removido do HTML, então o listener também é removido ou comentado
-    // document.getElementById('addMensalidadeButton') && document.getElementById('addMensalidadeButton').addEventListener('click', () =&gt; openAddEditModal('mensalidades'));
-    document.getElementById('addLeadButton') && document.getElementById('addLeadButton').addEventListener('click', () =&gt; openAddEditModal('leads'));
-
-
-    // Search input listeners (using event delegation or checking existence)
-    document.getElementById('searchAlunos') && document.getElementById('searchAlunos').addEventListener('input', (e) =&gt; handleSearch('alunos', e));
-    document.getElementById('searchProfessores') && document.getElementById('searchProfessores').addEventListener('input', (e) =&gt; handleSearch('professores', e));
-    document.getElementById('searchCursos') && document.getElementById('searchCursos').addEventListener('input', (e) =&gt; handleSearch('cursos', e));
-    document.getElementById('searchTurmas') && document.getElementById('searchTurmas').addEventListener('input', (e) =&gt; handleSearch('turmas', e));
-    document.getElementById('searchMatriculas') && document.getElementById('searchMatriculas').addEventListener('input', (e) =&gt; handleSearch('matriculas', e));
-    document.getElementById('searchMensalidades') && document.getElementById('searchMensalidades').addEventListener('input', (e) =&gt; handleSearch('mensalidades', e));
-    document.getElementById('searchLeads') && document.getElementById('searchLeads').addEventListener('input', (e) =&gt; handleSearch('leads', e));
-
-
-    // Filter select listeners (using event delegation or checking existence)
-    document.getElementById('filterAlunoStatus') && document.getElementById('filterAlunoStatus').addEventListener('change', (e) =&gt; handleFilter('alunos', 'status', e));
-    document.getElementById('filterProfessorStatus') && document.getElementById('filterProfessorStatus').addEventListener('change', (e) =&gt; handleFilter('professores', 'status', e));
-    document.getElementById('filterTurmaCurso') && document.getElementById('filterTurmaCurso').addEventListener('change', (e) =&gt; handleFilter('turmas', 'cursoId', e));
-    document.getElementById('filterTurmaProfessor') && document.getElementById('filterTurmaProfessor').addEventListener('change', (e) =&gt; handleFilter('turmas', 'professorId', e));
-    document.getElementById('filterTurmaStatus') && document.getElementById('filterTurmaStatus').addEventListener('change', (e) =&gt; handleFilter('turmas', 'ativa', e));
-    document.getElementById('filterMatriculaAluno') && document.getElementById('filterMatriculaAluno').addEventListener('change', (e) =&gt; handleFilter('matriculas', 'alunoId', e));
-    document.getElementById('filterMatriculaTurma') && document.getElementById('filterMatriculaTurma').addEventListener('change', (e) =&gt; handleFilter('matriculas', 'turmaId', e));
-    document.getElementById('filterMatriculaStatus') && document.getElementById('filterMatriculaStatus').addEventListener('change', (e) =&gt; handleFilter('matriculas', 'status', e));
-    document.getElementById('filterMensalidadeMatricula') && document.getElementById('filterMensalidadeMatricula').addEventListener('change', (e) =&gt; handleFilter('mensalidades', 'matriculaId', e));
-    document.getElementById('filterMensalidadeStatus') && document.getElementById('filterMensalidadeStatus').addEventListener('change', (e) =&gt; handleFilter('mensalidades', 'status', e));
-    document.getElementById('filterLeadCurso') && document.getElementById('filterLeadCurso').addEventListener('change', (e) =&gt; handleFilter('leads', 'cursoInteresse', e));
-    document.getElementById('filterLeadStatus') && document.getElementById('filterLeadStatus').addEventListener('change', (e) =&gt; handleFilter('leads', 'status', e));
-
-
-    // Modal form submit listener
-    document.getElementById('addEditForm') && document.getElementById('addEditForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const form = event.target;
-        const config = formFieldsConfig[currentItemType];
-
-        if (!validateForm(form, config)) {
-            showNotification('Por favor, corrija os erros no formulário.', 'error');
-            return;
-        }
-
-        const formData = new FormData(form);
-        const itemData = {};
-        config.forEach(field =&gt; {
-            const inputElement = form.elements[field.name];
-            if (inputElement) { // Verifica se o elemento existe no formulário atual
-                if (field.type === 'checkbox') {
-                    itemData[field.name] = inputElement.checked;
-                } else if (field.type === 'number') {
-                     itemData[field.name] = parseFloat(inputElement.value);
-                }
-                else {
-                    itemData[field.name] = inputElement.value;
-                }
-            }
-        });
-
-        if (currentItemId) {
-            itemData.id = currentItemId; // Adiciona o ID para edição
-        }
-
-        const savedItem = await saveItem(currentItemType, itemData);
-        if (savedItem) {
-            closeModal();
-            loadAndRenderItems(currentItemType); // Recarrega a lista
-             // Atualiza cards do dashboard se necessário
-             if (currentItemType === 'alunos' || currentItemType === 'mensalidades' || currentItemType === 'leads') loadDashboardData();
-        }
-    });
-
-     // Report button listeners
-     document.getElementById('generateMatriculasReport') && document.getElementById('generateMatriculasReport').addEventListener('click', generateMatriculasReport);
-     document.getElementById('generateMensalidadesReport') && document.getElementById('generateMensalidadesReport').addEventListener('click', generateMensalidadesReport);
-     document.getElementById('generateLeadsReport') && document.getElementById('generateLeadsReport').addEventListener('click', generateLeadsReport);
-
-
-&lt;/script&gt;
-
+        // Carregar dados ao iniciar
+        loadDashboardData();
+    </script>
 </body>
 </html>
